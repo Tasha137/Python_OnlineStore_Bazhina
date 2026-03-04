@@ -76,11 +76,11 @@ WSGI_APPLICATION = "HW_website.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "HW_website",        # имя базы
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / 'db.sqlite3',        # имя базы
         "USER": "postgres",      # пользователь
         "PASSWORD": "N_159baj21",
-        "HOST": "localhost",
+        "HOST": "db",
         "PORT": "5432",
     }
 }
