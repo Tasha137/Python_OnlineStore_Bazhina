@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список товаров</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .product-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-name { font-size: 1.4em; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .product-price { font-size: 1.5em; color: #28a745; font-weight: bold; margin: 10px 0; }
+        .product-desc { color: #666; margin-bottom: 15px; }
+        .add-to-cart {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .add-to-cart:hover { background: #0056b3; }
+        .empty { text-align: center; padding: 50px; color: #666; }
+        .nav { text-align: center; margin: 30px 0; }
+        .nav a { margin: 0 15px; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Каталог товаров</h1>
+
+        <div class="nav">
+            <a href="{% url 'index' %}">🏠 Главная</a>
+            <a href="{% url 'cart' %}">🛒 Корзина</a>
+            {% if user.is_authenticated %}
+                <span>👋 {{ user.username }}</span>
+            {% else %}
+                <a href="{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </div>
+
+        {% if products %}
+            <div class="product-grid">
+                {% for product in products %}
+                    <div class="product-card">
+                        <div class="product-name">{{ product.name }}</div>
+                        <td>{{ product.price_cents|floatformat:0 }} руб.</td>
+                        <div class="product-desc">{{ product.description|truncatewords:20 }}</div>
+                        <a href="{% url 'product_detail' product.pk %}" class="add-to-cart">Подробнее</a>
+                        <form action="{% url 'add_to_cart' product.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="add-to-cart">🛒 В корзину</button>
+</form>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty">
+                <h3>Нет товаров</h3>
+                <p>Добавьте товары в <a href="/admin/">админке</a></p>
+            </div>
+        {% endif %}
+
+        <div class="nav">
+            <a href="{% url 'index' %}">🏠 На главную</a>
+            <a href="{% url 'cart' %}">🛒 Корзина</a>
+        </div>
+    </div>
+</body>
+</html>

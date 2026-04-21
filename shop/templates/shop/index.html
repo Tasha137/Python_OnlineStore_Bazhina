@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Онлайн магазин</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 32px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .hero p {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-links a,
+        .nav-links button {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: bold;
+            font-size: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links button:hover {
+            color: #084298;
+        }
+
+        .status {
+            margin-top: 24px;
+            padding: 16px 18px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .status a,
+        .status button {
+            color: #6f42c1;
+            text-decoration: none;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .status a:hover,
+        .status button:hover {
+            text-decoration: underline;
+        }
+
+        .guest-box {
+            margin-top: 24px;
+            padding: 16px 18px;
+            background: #fff3cd;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .guest-box a {
+            color: #0d6efd;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .guest-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎉 Добро пожаловать в онлайн-магазин!</h1>
+            <p>Здесь вы можете смотреть товары, добавлять их в корзину и оформлять заказы.</p>
+        </div>
+
+        <div class="nav-links">
+            <a href="{% url 'product_list' %}">🛍️ Товары</a>
+            <a href="{% url 'cart' %}">🛒 Корзина</a>
+            {% if user.is_staff %}
+            <a href="/admin/">⚙️ Админка</a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">👤 Профиль</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">🚪 Выйти</button>
+                </form>
+            {% else %}
+                <a href="{% url 'register' %}">👤 Регистрация</a>
+                <a href="{% url 'login' %}">🔑 Войти</a>
+            {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="status">
+                <strong>👋 Привет, {{ user.username }}!</strong>
+                &nbsp;|&nbsp;
+                <a href="{% url 'profile' %}">Профиль</a>
+                &nbsp;|&nbsp;
+                <a href="{% url 'cart' %}">Корзина</a>
+                &nbsp;|&nbsp;
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Выйти</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="guest-box">
+                <a href="{% url 'register' %}">Зарегистрируйтесь</a> для покупок.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .messages {
+            margin-bottom: 18px;
+        }
+
+        .message {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .message.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .message.info {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .cart-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: bold;
+        }
+
+        .item-actions a {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .item-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .total {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #084298;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5c636a;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px 10px;
+            color: #555;
+        }
+
+        .empty a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .empty a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🛒 Корзина покупок</h1>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if cart_items %}
+                <ul class="cart-list">
+                    {% for item in cart_items %}
+                        <li class="cart-item">
+                            <div>
+                                <div class="item-name">{{ item.product.name }}</div>
+                                <div>Количество: {{ item.quantity }}</div>
+                                <div>Цена: {{ item.price }} руб.</div>
+                                <div>Сумма: {{ item.item_total }} руб.</div>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'cart_remove' item.id %}">Удалить</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="total">Итого: {{ total }} руб.</div>
+
+                <div class="actions">
+                    <a class="btn btn-secondary" href="{% url 'product_list' %}">Продолжить покупки</a>
+
+                    <form action="{% url 'create_order' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Оформить заказ</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="empty">
+                    <p>Корзина пуста.</p>
+                    <p><a href="{% url 'product_list' %}">Перейти к товарам</a></p>
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="{% url 'index' %}">На главную</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

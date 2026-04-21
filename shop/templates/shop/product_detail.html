@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
+        .product { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
+        .product-info { flex: 1; min-width: 280px; }
+        .product-name { font-size: 2em; margin-bottom: 15px; color: #333; }
+        .product-price { font-size: 1.6em; color: #28a745; font-weight: bold; margin-bottom: 15px; }
+        .product-stock { color: #666; margin-bottom: 15px; }
+        .product-desc { color: #444; line-height: 1.6; }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'product_list' %}">← Назад к товарам</a>
+            <a href="{% url 'cart' %}">Корзина</a>
+            <a href="{% url 'index' %}">Главная</a>
+        </div>
+
+        <div class="product">
+            <div class="product-info">
+                <div class="product-name">{{ product.name }}</div>
+                <div class="product-price">{{ product.price_cents|floatformat:0 }} руб.</div>
+                <div class="product-stock">Остаток на складе: {{ product.quantity_in_stock }}</div>
+                <div class="product-desc">
+                    {{ product.description|default:"Описание товара пока не добавлено." }}
+                </div>
+
+                <form action="{% url 'add_to_cart' product.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Добавить в корзину</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>Профиль {{ user.username }}</title></head>
+<body>
+<h1>Личный кабинет {{ user.username }}</h1>
+<p><a href="/shop/cart/">Корзина</a> | <a href="/shop/products/">Товары</a> | <a href="/admin/">Админка</a></p>
+<p><a href="{% url 'logout' %}">Выйти</a></p>
+<p>Заказы и профиль работают!</p>
+</body>
+</html>
